@@ -17,7 +17,8 @@ Here's an example of how playsong works::
 - Provides hot keys for `basic song play manipulation` (viz. Pause, Forward, Next, Previous ...)
 
 # Screenshot
-To be added
+![playsong screenshot](/images/playsong_img1.png?raw=true)
+
 
 # Install
 
