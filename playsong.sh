@@ -1,3 +1,6 @@
+#purpose: (for OSX) find songs based on query, display them (max. 50), allow user selection for playing
+#author: rms
+#date: 09Feb17
 #!/bin/bash
 while [ 1 ]
 do
@@ -25,50 +28,66 @@ do
 	len=${#array[*]}
 
 	if [ $len -eq 0 ]; then
-		printf "\n\nFOUND NONE\n"
+		printf "\n\nFOUND NONE"
 		sleep 1.2
 	elif [ $len -eq 1 ]; then
 		i=0
 		onlySong=`basename "${array[$i]}"`
 		printf "\n\nFOUND AND PLAYING: $onlySong\n\n"
 		#printf "Yes, its 1"
-		sleep 3
+		sleep 2
 		#printf "Playing ...\n"
 		mpg123 -Cv "${array[$i]}"
 	elif [ $len -le $MAX ]; then
-		printf "\n\nFOUND (${len})\n\n"
-		refreshSearch=false
-		allPlayed=false
-		while [ "$refreshSearch" = false ]
+		printf "\n\nFOUND (${len})\n"
+		newSearchRequired=false
+		firstTimeResults=true
+		while [ "$newSearchRequired" = false ]
 		do
-			i=0
-			while [ $i -lt $len ] && [ "$breakLoop" != 'n'  ]
-			do
-				songName=`basename "${array[$i]}"`
-				let i++
-				printf "($i) $songName\n" 
-			done
-			printf "\nSELECT (1,2...) or SEARCH AGAIN (0): "
-			read numChosen
-			if [ $numChosen -gt 0 ]; then
-				let songChoice=$numChosen-1
-				breakLoop='n'
-				#	echo $breakLoop
-				while [ $songChoice -lt $len ] && [ "$breakLoop" != 's' ] 
-				do
-					mpg123 -Cv "${array[$songChoice]}" 
-					let songChoice++
-					read -t 5 -p "'s' to re-select OR 'n' for new search" breakLoop
-				done
-				allPlayed=true
-				##printf "Playing ...\n"
-			else
-				refreshSearch=true
+			if [ "$firstTimeResults" = false ]; then
+				if [ $numChosen -gt 0 ]; then
+					let songChoice=$numChosen-1
+					while [ $songChoice -lt $len ] 
+					do
+						clear
+						mpg123 -Cv "${array[$songChoice]}" 
+						let songChoice++
+						printf "====================================\n"
+						read -t 5 -p "PRESS 's' to re-select OR 'n' for new search (in 5secs): " interimChoice
+						echo $interimChoice
+						if [ "$interimChoice" == 's' ]; then
+							break
+						fi 
+						if [ "$interimChoice" == 'n' ]; then
+							newSearchRequired=true
+							break
+						fi
+					done
+				fi
 			fi
+			if [ "$newSearchRequired" = false ]; then
+				i=0
+				while [ $i -lt $len ] 
+				do
+					songName=`basename "${array[$i]}"`
+					let i++
+					printf "\n($i) $songName" 
+				done
+				printf "\n\nSELECT (1,2...) or SEARCH AGAIN (0): "
+				read numChosen
+				if [ "$numChosen" -eq "0" ]; then
+					newSearchRequired=true
+				fi
+				#if [ "$numChosen" == "d" ]; then
+				#	read -p "WHICH SONG TO DELETE?: " delSongNumber
+				#	echo "Delete :";printf "${array[$i]}\n"
+				#fi
+			fi
+			firstTimeResults=false
 		done
 	else
-		printf "\n\nFOUND ($len), TOO MANY SONGS, REFINE SEARCH"
-		sleep 3	
+		printf "\n\nFOUND ($len), TOO MANY SONGS, SEARCH AGAIN, WAIT ...!"
+		sleep 2.5	
 	fi
 done
 
