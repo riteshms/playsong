@@ -1,25 +1,25 @@
 # playsong
-For OS X: a simple bash script to help quick keyword search and play mp3 songs
+For OS X: a simple bash script to help quick keyword search and play mp3 songs.
 
-beets
-=====
-
-Playsong is ...
-
-The purpose of playsong is ...
-It provides ... 
+The purpose of playsong is to help users working on command-line to select songs quickly with a keyword and then play them.
+It is a minimal shell program with lists and no graphical interface. The idea is to make it simple to play songs.
 
 Here's an example of how playsong works::
 
   $ playsong
 
+
+# Features
+
 - Uses the underlying Mac indexed search mechanism
+- Allows searching songs from keyword matches in the metadata
 - Displays a list of songs for selection
 - Provides hot keys for `basic song play manipulation` (viz. Pause, Forward, Next, Previous ...)
 
+# Screenshot
+To be added
 
-Install
--------
+# Install
 
 You can install playsong by simply copying the playsong.sh file and making it executable.
 Add this to your system path for anywhere access.
@@ -27,12 +27,11 @@ Add this to your system path for anywhere access.
 .. _Other links
 
 
-Other configuration
---------------------
+# Other configuration
 
 
-Other notes
------------
+# Other notes
+
 If you wish to use 'find' command then use the block:
  while IFS=  read -r -d $'\0'; do
     array+=("$REPLY")
@@ -56,7 +55,6 @@ done < <(find . -name ${input} -print0)
  rm -f tmpfile
 
 
-Authors
--------
+# Authors
 Ritesh SHAH
 
